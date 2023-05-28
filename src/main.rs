@@ -29,7 +29,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let events = v["Events"].as_array();
 
         for e in events {
-            println!("{:?}", e[0].to_string());
+            println!("{}", e[0].to_string());
         }
     }
 
