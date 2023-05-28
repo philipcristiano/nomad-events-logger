@@ -26,7 +26,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if is_newline {break};
         }
         let v: Value = serde_json::from_slice(chunks.concat().as_slice())?;
-        println!("Chunk: {:?}", v);
+        let events = v["Events"].as_array();
+
+        for e in events {
+            println!("{:?}", e[0].to_string());
+        }
     }
 
     Ok(())
