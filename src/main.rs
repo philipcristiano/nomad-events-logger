@@ -7,11 +7,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (res, mut handle) = client.events_subscribe(&params);
 
     while !res.is_finished() {
-        let msg = handle.recv().await;
-        if msg.is_some() {
-            let ser = serde_json::to_string(&msg).expect("Not json");
-            println!("{}", ser);
-        }
+        let msg = handle.recv().await.expect("No message found");
+        let payload = msg.payload.expect("No payload");
+        let ser = serde_json::to_string(&payload).expect("Not json");
+        println!("{}", ser);
     }
 
     Ok(())
