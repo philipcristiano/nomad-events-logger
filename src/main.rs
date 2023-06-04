@@ -1,35 +1,16 @@
-use serde_json::{Value};
-use clap::Parser;
-
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-struct Args {
-    /// Nomad API
-    #[arg(short, long, default_value_t = String::from("http://127.0.0.1:4646/v1/event/stream"))]
-    url: String,
-
-}
-
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = Args::parse();
+    let config = nomad_client_rs::Config::from_env();
+    let client = nomad_client_rs::NomadClient::new(config);
 
-    let url = args.url;
-    let mut res = reqwest::get(url).await?;
+    let params = nomad_client_rs::api::event::models::EventsSubscribeParams::default();
+    let (res, mut handle) = client.events_subscribe(&params);
 
-    // loop until \n encountered, adding chunks to a string or something, then try to parse
-    loop {
-        let mut chunks = vec!();
-        while let Some(chunk) = res.chunk().await? {
-            let is_newline = chunk.eq("\n");
-            chunks.push(chunk);
-            if is_newline {break};
-        }
-        let v: Value = serde_json::from_slice(chunks.concat().as_slice())?;
-        let events = v["Events"].as_array();
-
-        for e in events {
-            println!("{}", e[0].to_string());
+    while !res.is_finished() {
+        let msg = handle.recv().await;
+        if msg.is_some() {
+            let ser = serde_json::to_string(&msg).expect("Not json");
+            println!("{}", ser);
         }
     }
 
