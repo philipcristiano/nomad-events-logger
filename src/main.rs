@@ -1,5 +1,12 @@
+use clap::Parser;
+
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let _args = Args::parse();
     let config = nomad_client_rs::Config::from_env();
     let client = nomad_client_rs::NomadClient::new(config);
 
