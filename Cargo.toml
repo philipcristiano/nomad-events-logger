@@ -1,13 +1,15 @@
 [package]
-name = "nomad-events-logger"
+name = "nomad_events_logger"
 version = "0.1.3"
 edition = "2021"
+description = "Log events from the Nomad API"
+license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 bytes = "1.5.0"
-clap = { version = "4.4.10", features = ["derive"] }
+clap = { version = "4.4.6", features = ["derive"] }
 nomad-client-rs = "0.9.1"
-serde_json = "1.0.108"
+serde_json = "1.0.107"
 tokio = { version = "1", features = ["full"] }
