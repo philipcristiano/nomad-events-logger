@@ -674,8 +674,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "nomad-events-logger"
-version = "0.1.3"
+name = "nomad_events_logger"
+version = "0.1.4"
 dependencies = [
  "bytes",
  "clap",
